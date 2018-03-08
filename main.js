@@ -10,7 +10,8 @@
   function createFrame (dom) {
     dom.style.width = FRAME_WIDTH + "px"
     dom.style.height = FRAME_HEIGHT + "px"
-    dom.style.backgroundColor = "#efefef"
+    dom.style.backgroundColor = "#fff"
+    dom.style.border = "solid 1px #ddd"
   }
 
   function createMap () {
@@ -51,6 +52,22 @@
   function open(map, { x, y }, el) {
     if (map[y][x] === '×') {
       alert("game over")
+      const parent = el.parentElement
+      Array.prototype.forEach.call(parent.children, function (_el, index) {
+        let str_index = (index).toString()
+        let f = str_index.substr(0,1)
+        let s = str_index.substr(1,1)
+        if (s === '') {
+          f = 0
+          s = str_index.substr(0,1)
+        }
+        f = parseInt(f)
+        s = parseInt(s)
+        _el.innerText = map[f][s]
+        el.style.color = "red"
+        el.style.backgroundColor = "ddd"
+      })
+      return
     }
     el.innerText = map[y][x]
   }
@@ -107,7 +124,17 @@
         el.style.width = ITEM_WIDTH + 'px'
         el.style.height = ITEM_HEIGHT + 'px'
         el.style.float = 'left'
-        el.innerText = col
+        el.style.cursor = 'pointer'
+        el.style.lineHeight = ITEM_HEIGHT + 'px'
+        el.style.textAlign = "center"
+
+        // el.innerText = col
+        el.addEventListener('mouseover', function () {
+          this.style.backgroundColor = "#ddd"
+        })
+        el.addEventListener('mouseout', function () {
+          this.style.backgroundColor = "#fff"
+        })
         el.addEventListener('click', function () { open(map, { x, y }, el) })
         parent.appendChild(el)
       })
